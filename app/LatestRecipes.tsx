@@ -47,3 +47,4 @@ const recipes = await prisma.recipe.findMany({
 export default LatestRecipes;
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 3;
