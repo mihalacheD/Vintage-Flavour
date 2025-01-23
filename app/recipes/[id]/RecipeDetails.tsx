@@ -124,7 +124,7 @@ const RecipeDetails = async ({ recipe }: { recipe: Recipe}) => {
                 <Text size='6' wrap='balance' color='gray'>
                     <ol style={{ listStyle: "decimal", listStylePosition: "inside" }}>
                       {recipe.instructions.split("\n").map((instruction, index) => (
-                        <li key={index}>{instruction}</li>
+                        <li key={index} style={{ marginBottom: "1rem" }}>{instruction}</li>
                       ))}
                     </ol>
                   </Text>

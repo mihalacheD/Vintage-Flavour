@@ -41,7 +41,7 @@ const Navbar = () => {
               <AuthStatus />
           </Container>
 
-          <DropdownMenu.Root open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <DropdownMenu.Root modal={false} open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenu.Trigger >
               <button className="p-2" aria-label="Deschide meniul">
                 <HamburgerMenuIcon className="w-8 h-8 " color='gray' />

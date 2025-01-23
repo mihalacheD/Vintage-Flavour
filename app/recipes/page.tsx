@@ -160,8 +160,8 @@ import { Metadata } from 'next';
             </Container>
           );
         })}
+        <Pagination itemCount={recipeCount} pageSize={pageSize} currentPage={page}/>
       </Container>
-      <Pagination itemCount={recipeCount} pageSize={pageSize} currentPage={page}/>
     </Container>
   );
 };
