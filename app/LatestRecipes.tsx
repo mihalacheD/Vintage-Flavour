@@ -44,4 +44,6 @@ const recipes = await prisma.recipe.findMany({
   )
 }
 
-export default LatestRecipes
+export default LatestRecipes;
+
+export const dynamic = 'force-dynamic';
