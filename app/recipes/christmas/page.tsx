@@ -26,7 +26,7 @@ const page = () => {
 
       <Heading size='9' weight='medium' align='center' color='bronze' my='7'><Em>Christmas</Em> recipes</Heading>
       <Text size='5' color='gray' mx='4'>Look no further for Christmas recipes and dinner ideas. Get into the spirit with Christmas food like mulled wine and mince pies, make homemade presents, and create the perfect Christmas menu.</Text>
-      <Grid columns={ { initial: "2", md: "3"}} gap="8" width="auto" height='auto' my='9'>
+      <Grid columns={ { initial: "1", md: "3"}} gap="8" width="auto" height='auto' my='9'>
       { recipes.map( recipe => (
         <Card key={recipe.id} size='4'>
           <Inset clip="padding-box" side="top" pb="0" >
