@@ -1,84 +1,75 @@
-import { patchRecipeSchema } from "@/app/validationSchema";
-import prisma from "@/prisma/client";
+import { patchRecipeSchema } from "@/utils/validationSchema";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from 'next-auth';
-import authOptions from '@/app/auth/authOption';
+import { getServerSession } from "next-auth";
+import authOptions from "@/utils/authOption";
 
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({}, { status: 401 });
 
-export async function PATCH( request: NextRequest,
-                           { params }: { params: Promise<{ id: string }> }){
+  const body = await request.json();
+  const validation = patchRecipeSchema.safeParse(body);
 
-   const session = await getServerSession(authOptions)
-   if(!session)
-   return NextResponse.json({}, { status: 401 })
+  if (!validation.success)
+    return NextResponse.json(validation.error.format(), { status: 400 });
 
-    const body = await request.json()
-    const validation = patchRecipeSchema.safeParse(body)
+  const id = (await params).id;
+  const recipe = await prisma.recipe.findUnique({
+    where: { id: id },
+  });
 
-    if(!validation.success)
-      return NextResponse.json(validation.error.format(), { status: 400} )
+  if (body.assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: { id: body.assignedToUserId },
+    });
+    if (!user)
+      return NextResponse.json({ error: "Invalid user." }, { status: 400 });
+  }
 
+  if (!recipe)
+    return NextResponse.json({ error: "Invalid recipe" }, { status: 404 });
 
-    const id = (await params).id
-    const recipe = await prisma.recipe.findUnique({
-      where: { id: id}
-    })
-
-
-    if (body.assignedToUserId) {
-      const user = await prisma.user.findUnique({
-        where: { id: body.assignedToUserId },
-      })
-      if (!user)
-        return NextResponse.json(
-          { error: "Invalid user." },
-          { status: 400 }
-        );
-    }
-
-    if(!recipe)
-      return NextResponse.json({ error: "Invalid recipe"}, { status: 404 })
-
-    const updatedRecipe = await prisma.recipe.update({
-      where: { id : recipe.id},
-      data: {
-        title: body.title,
-        categories: body.categories,
-        servings: body.servings,
-        difficulties: body.difficulties,
-        description: body.description,
-        ingredients: body.ingredients,
-        instructions: body.instructions,
-        cookTime: body.cookTime,
-        prepTime: body.prepTime,
-        imageUrl: body.imageUrl, // URL-ul imaginii
-        assignedToUserId : body.assignedToUserId
-      }
-    })
-    return NextResponse.json(updatedRecipe)
+  const updatedRecipe = await prisma.recipe.update({
+    where: { id: recipe.id },
+    data: {
+      title: body.title,
+      categories: body.categories,
+      servings: body.servings,
+      difficulties: body.difficulties,
+      description: body.description,
+      ingredients: body.ingredients,
+      instructions: body.instructions,
+      cookTime: body.cookTime,
+      prepTime: body.prepTime,
+      imageUrl: body.imageUrl, // URL-ul imaginii
+      assignedToUserId: body.assignedToUserId,
+    },
+  });
+  return NextResponse.json(updatedRecipe);
 }
 
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({}, { status: 401 });
 
-
-export async function DELETE( request: NextRequest,
-                            { params }: { params: Promise<{ id: string }> }
-){
-
-  const session = await getServerSession(authOptions)
-  if(!session)
-  return NextResponse.json({}, { status: 401 })
-
-  const id = (await params).id
+  const id = (await params).id;
   const recipe = await prisma.recipe.findUnique({
-    where: { id: id}
-  })
+    where: { id: id },
+  });
 
-  if(!recipe)
-    return NextResponse.json({ error: "Invalid recipe"}, { status: 404 })
+  if (!recipe)
+    return NextResponse.json({ error: "Invalid recipe" }, { status: 404 });
 
   await prisma.recipe.delete({
-    where: { id: id}
-  })
+    where: { id: id },
+  });
 
-  return NextResponse.json({})
+  return NextResponse.json({});
 }

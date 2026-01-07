@@ -1,131 +1,85 @@
-import { Container, Button, Box, Flex, Heading, Text } from '@radix-ui/themes';
-import { CldImage } from 'next-cloudinary';
-import Link from 'next/link';
-import { GiMeal } from 'react-icons/gi';
-import { IoTimerSharp } from 'react-icons/io5';
-import { MdStars } from 'react-icons/md';
-import { PiForkKnifeFill } from 'react-icons/pi';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-import './recipe.css';
+import { Container } from "@radix-ui/themes";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const LoadingRecipePage = () => {
-
-  const recipes = [
-    { id: 1, imageUrl: null, title: "Recipe-title", category: null },
-    { id: 2, imageUrl: null, title: "Recipe-title", category: null },
-  ];
-
+const LoadingRecipes = () => {
   return (
-    <>
-      <Container mb="8em" mt="5em">
-        <Container maxWidth={{ initial: '90vw', md: '80vw', xl: '60vw' }}>
-          <Button size="4" variant="outline" color="gray" mb="8" mt="3" ml="2">
-            <Link href="/recipes/new">New recipe</Link>
-          </Button>
-        </Container>
+    <div className="py-12">
+      <Container className="max-w-7xl mx-auto px-4">
 
-        <Container maxWidth={{ initial: '90vw', md: '80vw', xl: '60vw' }}>
-          {recipes.map((recipe) => {
-            return (
-              <Container key={recipe.id} p="5" className="recipe-container">
-                <Flex direction="column" gap="6" align="center">
-                    {/* Afișare imagine */}
-                    {!recipe.imageUrl ? (
-                      <Skeleton height={300} width={300} className="recipe-img-skeleton" />
-                    ) : (
-                      <CldImage
-                        className="recipe-img"
-                        alt={recipe.title}
-                        src={recipe.imageUrl}
-                        width={500}
-                        height={500}
-                      />
-                    )}
+        {/* Actions bar skeleton */}
+        <div className="mb-12 flex gap-4">
+          <Skeleton height={44} width={160} borderRadius={12} />
+          <Skeleton height={44} width={160} borderRadius={12} />
+        </div>
 
-                    <Container mx={{ initial: '0', md: '9' }}>
-                      <Box mb="7" mx="2">
-                        <Heading size="9" align="center" weight="medium" color="gray">
-                          <Skeleton/>
-                        </Heading>
-                      </Box>
+        {/* Recipes skeleton list */}
+        <div className="space-y-8 mb-12">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-3xl shadow-md overflow-hidden border border-gray-100"
+            >
+              <div className="grid md:grid-cols-5 gap-0">
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <PiForkKnifeFill />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          Categories:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                          <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+                {/* Image */}
+                <div className="md:col-span-2 relative h-64 md:h-auto">
+                  <Skeleton className="w-full h-full" />
+                  <div className="absolute top-4 left-4">
+                    <Skeleton height={22} width={90} borderRadius={999} />
+                  </div>
+                </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <GiMeal />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          Servings:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                        <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+                {/* Content */}
+                <div className="md:col-span-3 p-6 md:p-8 flex flex-col">
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <MdStars />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          Difficulty:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                        <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+                  {/* Title & author */}
+                  <div className="mb-4">
+                    <Skeleton height={32} width="70%" />
+                    <Skeleton height={16} width="40%" className="mt-2" />
+                  </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <IoTimerSharp />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          CookTime:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                          <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+                  {/* Description */}
+                  <div className="mb-6 space-y-2">
+                    <Skeleton height={14} />
+                    <Skeleton height={14} />
+                    <Skeleton height={14} width="80%" />
+                  </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <IoTimerSharp />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          PrepTime:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                          <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
-                    </Container>
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                    {Array.from({ length: 4 }).map((_, j) => (
+                      <div key={j} className="flex items-center gap-2">
+                        <Skeleton circle width={28} height={28} />
+                        <div className="flex-1">
+                          <Skeleton height={10} width="60%" />
+                          <Skeleton height={14} width="40%" className="mt-1" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
 
-                        <Text size="7" align="center">
-                          <Skeleton height={40} width={400}/>
-                        </Text>
+                  {/* Read more */}
+                  <div className="mt-auto">
+                    <Skeleton height={18} width={140} />
+                  </div>
 
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                    <Link href={`/recipes/${recipe.id}`} className='link'>...Read more</Link>
+        {/* Pagination skeleton */}
+        <div className="flex justify-center gap-3">
+          <Skeleton height={36} width={36} borderRadius={8} />
+          <Skeleton height={36} width={36} borderRadius={8} />
+          <Skeleton height={36} width={36} borderRadius={8} />
+        </div>
 
-                    </Flex>
-              </Container>
-            );
-          })}
-        </Container>
       </Container>
-    </>
+    </div>
   );
 };
 
-export default LoadingRecipePage;
+export default LoadingRecipes;

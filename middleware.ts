@@ -1,7 +1,6 @@
-export { default } from "next-auth/middleware"
+// middleware.ts
+export { default } from "next-auth/middleware";
 
-export const config = { matcher: [
-               "/recipes/new",
-               "/recipes/edit/ :id+"
-  ]
- }
+export const config = {
+  matcher: ["/recipes/new", "/recipes/:id/edit"],
+};

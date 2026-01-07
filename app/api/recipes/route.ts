@@ -1,14 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/prisma/client';
-import { RecipeSchema } from '../../validationSchema';
-import { getServerSession } from 'next-auth';
-import authOptions from '@/app/auth/authOption';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { RecipeSchema } from "../../../utils/validationSchema";
+import { getServerSession } from "next-auth";
+import authOptions from "@/utils/authOption";
 
 export async function POST(request: NextRequest) {
-
-const session = await getServerSession(authOptions)
-if(!session)
-  return NextResponse.json({}, { status: 401 })
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({}, { status: 401 });
 
   const body = await request.json();
 
@@ -24,18 +22,24 @@ if(!session)
     try {
       // Verificare dacă imageBase64 este valid
       if (!isValidBase64(body.imageBase64)) {
-        return NextResponse.json({ error: 'Invalid image format' }, { status: 400 });
+        return NextResponse.json(
+          { error: "Invalid image format" },
+          { status: 400 }
+        );
       }
 
       // Trimite imaginea la Cloudinary folosind un endpoint intern
-      const cloudinaryResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upload-image`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: body.imageBase64 }),
-      });
+      const cloudinaryResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/upload-image`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: body.imageBase64 }),
+        }
+      );
 
       if (!cloudinaryResponse.ok) {
-        throw new Error('Failed to upload image to Cloudinary');
+        throw new Error("Failed to upload image to Cloudinary");
       }
 
       const cloudinaryData = await cloudinaryResponse.json();

@@ -14,9 +14,7 @@ generator zod {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
-
 model Recipe {
   id               String   @id @default(uuid())
   title            String

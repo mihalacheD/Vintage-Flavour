@@ -1,9 +1,15 @@
+/* 1. Importuri de fonturi */
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+
+/* 2. Directivele de bază Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 3. Variabile de sistem și temă */
 :root {
   --foreground: #171717;
+  --background: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,17 +19,112 @@
   }
 }
 
-
+/* 4. Stiluri globale */
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-roboto);
+  font-family: sans-serif;
 }
 
-@layer utilities {
-  .nav-link {
-    @apply text-zinc-500 hover:text-zinc-800 transition-colors text-2xl
+/* Fix pentru Avatar dimensions - Categories */
+.rt-AvatarRoot[data-size="5"] {
+  width: 64px !important;
+  height: 64px !important;
+  flex-shrink: 0;
+}
+
+.rt-AvatarImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* 5. Componente (Clase complexe care folosesc @apply) */
+@layer components {
+  .recipe-img {
+    @apply mb-5 rounded-xl;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
+  .recipe-container {
+    background-color: #f9f9f9;
+    border: solid var(--gray-a2);
+    border-radius: 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 10em;
+  }
+
+  .recipe-details {
+    padding: 0.7rem;
+    border-radius: 8px;
+  }
+
+  .section-title {
+    color: #ec9131;
+    @apply font-bold mb-2 pb-1 ml-2;
+    border-bottom: 2px solid #ec9131;
+  }
+
+  .link {
+    @apply text-[1.4em] transition-colors;
+    color: var(--gray-11);
+  }
+
+  .link:hover {
+    color: var(--gray-12);
+    @apply underline;
+  }
+
+  .nav-link {
+    @apply text-zinc-500 hover:text-zinc-800 transition-colors text-2xl;
+  }
 }
 
+/* 6. Utilități (Clase simple sau specifice) */
+@layer utilities {
+  .orange {
+    color: #ec9131;
+  }
+
+  .green {
+    color: #79c141;
+  }
+
+  .great-vibes-regular {
+    font-family: "Great Vibes", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .upload_button {
+    max-width: var(--container-4);
+    width: 60vw;
+    text-align: left;
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
+    padding-left: 0.6em;
+    border-radius: var(--nextui-radius-large);
+    border: 1px solid #dfdcdc;
+    color: var(--slate-11);
+  }
+
+  .upload_button:hover {
+    border-color: gray;
+  }
+}
+
+
+.upload_button{
+  max-width: var(--container-4);
+  width: 60vw;
+  text-align: left;
+  padding-top: 0.6em;
+  padding-bottom: 0.6em;
+  padding-left: 0.6em;
+  border-radius: var(--nextui-radius-large);
+  border: 1px solid #dfdcdc;
+  color:  var(--slate-11);
+}
+.upload_button:hover {
+  border-color: gray;
+}

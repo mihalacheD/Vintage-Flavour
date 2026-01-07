@@ -1,20 +1,12 @@
 import type { Metadata } from "next";
-import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
-import { Roboto } from 'next/font/google';
-import "./globals.css";
-import Navbar from "./Navbar";
-import AuthProvider from "./auth/Provider";
-import QueryClientProvider from "./QueryCkientProvider";
+import Navbar from "../components/Navbar";
+import AuthProvider from "../components/providers/Provider";
+import QueryClientProvider from "../components/providers/QueryClientProvider";
+import "@radix-ui/themes/styles.css";
+import "./globals.css"
 
 
-
-
-const roboto = Roboto({
-  subsets:['latin'],
-  weight: ['100', '300', '400', '500', '700' , '900'],
-  variable: "--font-roboto"
-})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,15 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={ roboto.variable }>
+      <body>
         <QueryClientProvider>
-        <AuthProvider>
-          <Theme>
-          <Navbar/>
-          {children}
-          </Theme>
-        </AuthProvider>
+          <AuthProvider>
+            <Theme>
+              <Navbar />
+              {children}
+            </Theme>
+          </AuthProvider>
         </QueryClientProvider>
       </body>
     </html>

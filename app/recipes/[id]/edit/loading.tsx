@@ -1,3 +1,3 @@
-import RecipeFormSkeleton from '../../_components/RecipeFormSkeleton';
+import RecipeFormSkeleton from '../../../../components/RecipeFormSkeleton';
 
 export default RecipeFormSkeleton;

@@ -1,156 +1,100 @@
-import { Container, Button, Box, Flex, Heading, Text } from '@radix-ui/themes';
-import { CldImage } from 'next-cloudinary';
-import Link from 'next/link';
-import { GiMeal } from 'react-icons/gi';
-import { IoTimerSharp } from 'react-icons/io5';
-import { MdStars } from 'react-icons/md';
-import { PiForkKnifeFill } from 'react-icons/pi';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-import '../recipe.css';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
-
-const LoadingRecipePage = () => {
-
-  const recipes = [
-    { id: 1, imageUrl: null, title: "Recipe-title", category: null }
-  ];
-
+const LoadingRecipeDetails = () => {
   return (
-    <>
-      <Container mb="8em" mt="5em">
-        <Container maxWidth={{ initial: '90vw', md: '80vw', xl: '60vw' }}>
-          <Button size="4" variant="outline" color="gray" mb="8" mt="3" ml="2">
-            <Link href="/recipes/new">New recipe</Link>
-          </Button>
-        </Container>
+    <div className="bg-white min-h-screen max-w-5xl mx-auto px-4 py-8 rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+      {/* Hero Image */}
+      <div className="relative w-full h-96 bg-gray-200 overflow-hidden">
+        <Skeleton height="100%" />
 
-        <Container maxWidth={{ initial: '90vw', md: '80vw', xl: '60vw' }}>
-          {recipes.map((recipe) => {
-            return (
-              <Container key={recipe.id} p="5" className="recipe-container">
-                <Flex direction="column">
-                  <Flex direction={{ initial: 'column', md: 'row' }} align="center" gap="6">
-                    {/* Afișare imagine */}
-                    {!recipe.imageUrl ? (
-                      <Skeleton height={300} width={300} className="recipe-img-skeleton" />
-                    ) : (
-                      <CldImage
-                        className="recipe-img"
-                        alt={recipe.title}
-                        src={recipe.imageUrl}
-                        width={500}
-                        height={500}
-                      />
-                    )}
+        {/* Category Badge */}
+        <div className="absolute top-6 left-6">
+          <Skeleton width={120} height={36} borderRadius={999} />
+        </div>
+      </div>
 
-                    <Container mx={{ initial: '0', md: '9' }}>
-                      <Box mb="7" mx="2">
-                        <Heading size="9" align="center" weight="medium" color="gray">
-                          <Skeleton/>
-                        </Heading>
-                      </Box>
+      {/* Content */}
+      <div className="p-8 md:p-12">
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <PiForkKnifeFill />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          Categories:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                          <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+        {/* Title & Author */}
+        <div className="text-center mb-10">
+          <Skeleton height={48} width="60%" className="mx-auto mb-4" />
+          <Skeleton height={20} width="30%" className="mx-auto" />
+        </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <GiMeal />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          Servings:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                        <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+        {/* Quick Info Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="rounded-xl p-4 border border-gray-200 bg-gray-50"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <Skeleton circle width={40} height={40} />
+                <div className="flex-1">
+                  <Skeleton height={12} width="60%" />
+                  <Skeleton height={20} width="40%" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <MdStars />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          Difficulty:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                        <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+        {/* Description */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-4">
+            <Skeleton width={48} height={4} />
+            <Skeleton width={150} height={28} />
+          </div>
+          <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+            <Skeleton count={3} />
+          </div>
+        </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <IoTimerSharp />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          CookTime:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                          <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
+        {/* Ingredients */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-4">
+            <Skeleton width={48} height={4} />
+            <Skeleton width={150} height={28} />
+          </div>
+          <div className="rounded-2xl p-6 border border-gray-200 bg-orange-50">
+            <ul className="space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <Skeleton circle width={24} height={24} />
+                  <Skeleton height={18} width="80%" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-                      <Flex direction="row" mb="4" mx="2" align="end">
-                        <Text size={{ initial: '6', xs: '8' }} className="orange" mr="0.4em">
-                          <IoTimerSharp />
-                        </Text>
-                        <Text size={{ initial: '5', xs: '7' }} color="gray" mr="0.4em">
-                          PrepTime:
-                        </Text>
-                        <Text size={{ initial: '4', xs: '6' }} color="gray">
-                          <Skeleton height={40} width={200}/>
-                        </Text>
-                      </Flex>
-                    </Container>
-                  </Flex>
+        {/* Instructions */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <Skeleton width={48} height={4} />
+            <Skeleton width={180} height={28} />
+          </div>
 
-                  <Flex gap="4" direction="column" mt="6" mb="6">
-                    <Text as="p" size="7" className="section-title">
-                      Description:
-                    </Text>
-                    <Box mb="3" mx="5" className="recipe-details">
-                      <Text as="p" size="6" wrap="balance" color="gray">
-                        <Skeleton />
-                      </Text>
-                    </Box>
+          <div className="space-y-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-6 border-l-4 border-gray-200 shadow-sm"
+              >
+                <div className="flex gap-4">
+                  <Skeleton circle width={40} height={40} />
+                  <Skeleton height={18} width="85%" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-                    <Text size="7" className="section-title">
-                      Ingredients:
-                    </Text>
-                    <Box mb="3" mx="5" className="recipe-details">
-                      <Text size="6" wrap="balance" color="gray">
-                        <ul style={{ listStyle: 'initial', listStylePosition: 'inside' }}>
-                          <Skeleton count={3} />
-                        </ul>
-                      </Text>
-                    </Box>
+      </div>
+    </div>
+  )
+}
 
-                    <Text as="p" size="7" className="section-title">
-                      Instruction:
-                    </Text>
-                    <Box mb="3" mx="5" className="recipe-details">
-                      <Text as="p" size="6" wrap="balance" color="gray">
-                        <Skeleton />
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Flex>
-              </Container>
-            );
-          })}
-        </Container>
-      </Container>
-    </>
-  );
-};
-
-export default LoadingRecipePage;
+export default LoadingRecipeDetails

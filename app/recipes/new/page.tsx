@@ -1,13 +1,12 @@
+import RecipeForm from '@/components/RecipeForm';
 import React from 'react'
-import RecipeForm from '../_components/RecipeForm';
 
 
-const NewRecipePage =async() => {
+
+const NewRecipePage = async () => {
 
   return (
-    <div>
-      <RecipeForm/>
-    </div>
+      <RecipeForm />
   )
 }
 

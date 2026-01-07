@@ -134,7 +134,7 @@ export const RecipeIncludeSchema: z.ZodType<Prisma.RecipeInclude> = z.object({
   assignedToUser: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-export const RecipeArgsSchema: z.ZodType<Prisma.RecipeDefaultArgs> = z.object({
+export const RecipeArgsSchema: z.object({
   select: z.lazy(() => RecipeSelectSchema).optional(),
   include: z.lazy(() => RecipeIncludeSchema).optional(),
 }).strict();
@@ -164,7 +164,7 @@ export const AccountIncludeSchema: z.ZodType<Prisma.AccountInclude> = z.object({
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-export const AccountArgsSchema: z.ZodType<Prisma.AccountDefaultArgs> = z.object({
+export const AccountArgsSchema: z.object({
   select: z.lazy(() => AccountSelectSchema).optional(),
   include: z.lazy(() => AccountIncludeSchema).optional(),
 }).strict();
@@ -192,7 +192,7 @@ export const SessionIncludeSchema: z.ZodType<Prisma.SessionInclude> = z.object({
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-export const SessionArgsSchema: z.ZodType<Prisma.SessionDefaultArgs> = z.object({
+export const SessionArgsSchema: z.object({
   select: z.lazy(() => SessionSelectSchema).optional(),
   include: z.lazy(() => SessionIncludeSchema).optional(),
 }).strict();
@@ -215,12 +215,12 @@ export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
-export const UserArgsSchema: z.ZodType<Prisma.UserDefaultArgs> = z.object({
+export const UserArgsSchema: z.object({
   select: z.lazy(() => UserSelectSchema).optional(),
   include: z.lazy(() => UserIncludeSchema).optional(),
 }).strict();
 
-export const UserCountOutputTypeArgsSchema: z.ZodType<Prisma.UserCountOutputTypeDefaultArgs> = z.object({
+export const UserCountOutputTypeArgsSchema: z.object({
   select: z.lazy(() => UserCountOutputTypeSelectSchema).nullish(),
 }).strict();
 
@@ -2666,10 +2666,12 @@ export const RecipeUpdateArgsSchema: z.ZodType<Prisma.RecipeUpdateArgs> = z.obje
 export const RecipeUpdateManyArgsSchema: z.ZodType<Prisma.RecipeUpdateManyArgs> = z.object({
   data: z.union([ RecipeUpdateManyMutationInputSchema,RecipeUncheckedUpdateManyInputSchema ]),
   where: RecipeWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const RecipeDeleteManyArgsSchema: z.ZodType<Prisma.RecipeDeleteManyArgs> = z.object({
   where: RecipeWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const AccountCreateArgsSchema: z.ZodType<Prisma.AccountCreateArgs> = z.object({
@@ -2707,10 +2709,12 @@ export const AccountUpdateArgsSchema: z.ZodType<Prisma.AccountUpdateArgs> = z.ob
 export const AccountUpdateManyArgsSchema: z.ZodType<Prisma.AccountUpdateManyArgs> = z.object({
   data: z.union([ AccountUpdateManyMutationInputSchema,AccountUncheckedUpdateManyInputSchema ]),
   where: AccountWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const AccountDeleteManyArgsSchema: z.ZodType<Prisma.AccountDeleteManyArgs> = z.object({
   where: AccountWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const SessionCreateArgsSchema: z.ZodType<Prisma.SessionCreateArgs> = z.object({
@@ -2748,10 +2752,12 @@ export const SessionUpdateArgsSchema: z.ZodType<Prisma.SessionUpdateArgs> = z.ob
 export const SessionUpdateManyArgsSchema: z.ZodType<Prisma.SessionUpdateManyArgs> = z.object({
   data: z.union([ SessionUpdateManyMutationInputSchema,SessionUncheckedUpdateManyInputSchema ]),
   where: SessionWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const SessionDeleteManyArgsSchema: z.ZodType<Prisma.SessionDeleteManyArgs> = z.object({
   where: SessionWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
@@ -2789,10 +2795,12 @@ export const UserUpdateArgsSchema: z.ZodType<Prisma.UserUpdateArgs> = z.object({
 export const UserUpdateManyArgsSchema: z.ZodType<Prisma.UserUpdateManyArgs> = z.object({
   data: z.union([ UserUpdateManyMutationInputSchema,UserUncheckedUpdateManyInputSchema ]),
   where: UserWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const UserDeleteManyArgsSchema: z.ZodType<Prisma.UserDeleteManyArgs> = z.object({
   where: UserWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const VerificationTokenCreateArgsSchema: z.ZodType<Prisma.VerificationTokenCreateArgs> = z.object({
@@ -2826,8 +2834,10 @@ export const VerificationTokenUpdateArgsSchema: z.ZodType<Prisma.VerificationTok
 export const VerificationTokenUpdateManyArgsSchema: z.ZodType<Prisma.VerificationTokenUpdateManyArgs> = z.object({
   data: z.union([ VerificationTokenUpdateManyMutationInputSchema,VerificationTokenUncheckedUpdateManyInputSchema ]),
   where: VerificationTokenWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
 
 export const VerificationTokenDeleteManyArgsSchema: z.ZodType<Prisma.VerificationTokenDeleteManyArgs> = z.object({
   where: VerificationTokenWhereInputSchema.optional(),
+  limit: z.number().optional(),
 }).strict() ;
