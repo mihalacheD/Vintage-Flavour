@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Container } from "@radix-ui/themes";
 import LatestRecipes from "../components/LatestRecipes";
 import Categories from "../components/Categories";
@@ -6,7 +8,6 @@ import Article from "../components/Article";
 import Footer from "../components/Footer"
 import CristmasRecipes from "../components/CristmasRecipes";
 import { Metadata } from "next";
-
 
 
 export default function Home() {
