@@ -8,15 +8,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator zod {
-  provider = "zod-prisma-types"
-  createIncludeSchemas = false
-}
-
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
+
 model Recipe {
   id               String   @id @default(uuid())
   title            String
@@ -26,9 +23,9 @@ model Recipe {
   description      String
   ingredients      String   @db.Text
   instructions     String   @db.Text
-  cookTime         String // Timpul de gătit, ex: "01:30"
-  prepTime         String // Timpul de pregătire, ex: "00:45"
-  imageUrl         String? // URL-ul imaginii principale (opțional)
+  cookTime         String
+  prepTime         String
+  imageUrl         String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   assignedToUserId String?  @db.VarChar(255)
