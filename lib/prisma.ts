@@ -6,18 +6,19 @@ if (!connectionString) {
   throw new Error("DATABASE_URL is not defined in environment variables");
 }
 
-const adapter = new PrismaMariaDb(connectionString);
-
 const prismaClientSingleton = () => {
+  const adapter = new PrismaMariaDb(connectionString);
   return new PrismaClient({ adapter });
 };
 
-declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleton>;
-}
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
 
-export const prisma = globalThis.prisma ?? prismaClientSingleton();
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClientSingleton | undefined;
+};
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
+export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
-export default prisma
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export default prisma;
