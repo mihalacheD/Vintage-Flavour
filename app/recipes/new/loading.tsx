@@ -1,3 +1,5 @@
-import RecipeFormSkeleton from '../../../components/RecipeFormSkeleton';
+import RecipeFormSkeleton from "@/components/RecipeFormSkeleton";
 
-export default RecipeFormSkeleton;
+export default function Loading() {
+  return <RecipeFormSkeleton />;
+}

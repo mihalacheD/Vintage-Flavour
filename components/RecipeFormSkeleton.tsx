@@ -1,15 +1,15 @@
 import { Container, Heading, Box } from "@radix-ui/themes";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton from "./Skeleton";
 
 const RecipeFormSkeleton = () => {
   return (
     <div className="min-h-dvh flex justify-center bg-gray-50 px-3 py-4 sm:px-4 sm:py-8">
       <Container size="3" className="max-w-5xl">
-        <Box className="bg-white rounded-[32px] shadow-xl border border-gray-200 overflow-hidden">
+        <Box className="bg-white rounded-4xl shadow-xl border border-gray-200 overflow-hidden">
 
           {/* Header skeleton */}
-          <div className="bg-gradient-to-r from-[#EC9131] to-[#d97e1f] px-8 py-10 text-center">
+          <div className="bg-linear-to-r from-[#EC9131] to-[#d97e1f] px-8 py-10 text-center">
             <Heading size="9" className="text-white font-bold">
               <Skeleton width={220} height={36} baseColor="#f3a75a" />
             </Heading>

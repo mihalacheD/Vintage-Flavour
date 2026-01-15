@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
-import { withAuth } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware"
 
-export const proxy = withAuth(function middleware(_request: NextRequest) {
-  return NextResponse.next();
-}, {
-  callbacks: {
-    authorized: ({ token }) => !!token,
+export default withAuth({
+  pages: {
+    signIn: "/api/auth/signin",
   },
-});
+})
 
 export const config = {
-  matcher: ["/recipes/new", "/recipes/:id/edit"],
-};
+  matcher: [
+    "/recipes/new",
+    "/recipes/:id/edit",
+  ],
+}

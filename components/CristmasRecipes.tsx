@@ -9,7 +9,7 @@ const ChristmasRecipes = () => {
     <div className="my-16 mx-4">
       {/* Christmas Banner */}
       <div
-        className="relative rounded-3xl overflow-hidden shadow-2xl min-h-[300px] md:min-h-[400px]"
+        className="relative rounded-3xl overflow-hidden shadow-2xl min-h-75 md:min-h-100"
         style={{
           backgroundImage: "url('/christmas.webp')",
           backgroundPosition: 'right center',
@@ -17,7 +17,7 @@ const ChristmasRecipes = () => {
         }}
       >
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-red-900/80 via-red-800/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-red-900/80 via-red-800/60 to-transparent"></div>
 
         {/* Content */}
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between px-8 md:px-12 py-12 md:py-16 gap-8">
@@ -63,7 +63,7 @@ const ChristmasRecipes = () => {
           </div>
 
           {/* Right Side - Button */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <button
               onClick={() => router.push('/recipes/christmas')}
               className="group bg-white hover:bg-red-50 text-red-700 px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-red-200 transition-all duration-300 hover:scale-105 border-2 border-red-100"

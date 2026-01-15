@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { Theme } from "@radix-ui/themes";
-import Navbar from "../components/Navbar";
-import AuthProvider from "../components/providers/Provider";
-import QueryClientProvider from "../components/providers/QueryClientProvider";
 import "@radix-ui/themes/styles.css";
-import "./globals.css"
+import "./globals.css";
 
+import AuthProvider from "@/components/AuthProvider";
+import Navbar from "@/components/Navbar";
+import QueryClientProvider from "@/components/QueryClientProvider";
 
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <QueryClientProvider>
           <AuthProvider>
             <Theme>

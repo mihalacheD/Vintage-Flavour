@@ -1,98 +1,92 @@
 'use client'
-import { Button, Callout, Container, Flex } from "@radix-ui/themes";
-import { Form, Input } from "@nextui-org/react";
+import { Button, Callout, Flex } from "@radix-ui/themes";
+import { Input } from "@heroui/react";
 import { useForm } from 'react-hook-form';
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useState } from "react";
 
-
-interface Register {
+interface RegisterForm {
   name: string;
   email: string;
 }
 
 const Register = () => {
-
-  const { register, handleSubmit, reset,  formState: { errors }} = useForm<Register>();
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<RegisterForm>();
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const onSubmit = async (data: Register) => {
+  const onSubmit = async (data: RegisterForm) => {
     try {
-      const response = await axios.post('/api/register', data);
-      if (response.status === 200) {
-        setSuccessMessage('Registration successful! 🎉');
-        setError(null); // Resetăm eroarea dacă totul a mers bine
-        // Resetează formularul
+      const response = await axios.post('/api/newsletter', data);
+      if (response.status === 201 || response.status === 200) {
+        setSuccessMessage('Subscribed successfully! 🎉');
+        setError(null);
         reset();
-        // Ascunde mesajul de succes după 3 secunde
-        setTimeout(() => {
-          setSuccessMessage(null);
-        }, 3000);
+        setTimeout(() => setSuccessMessage(null), 4000);
       }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ error: string }>;
-        if (axiosError.response) {
-          if (axiosError.response.data.error === "User already exists") {
-            setError("Email already registered. Please try logging in.");
-          } else {
-            setError(axiosError.response.data.error || 'An unexpected error occurred.');
-          }
-        } else {
-          setError('No response from server. Please try again later.');
-        }
-      } else {
-        setError('An unexpected error occurred.');
-      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Something went wrong. Please try again.');
+      setTimeout(() => setError(null), 4000);
     }
   };
 
-  return(
-    <Flex direction='column' gap='2'>
+  return (
+    <Flex direction='column' gap='3' className="w-full">
+      {/* Mesaje de stare cu animație simplă */}
+      {error && (
+        <Callout.Root color="red" variant="surface" size="1">
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
+      {successMessage && (
+        <Callout.Root color="green" variant="surface" size="1">
+          <Callout.Text>{successMessage}</Callout.Text>
+        </Callout.Root>
+      )}
 
-    {error && (
-      <Callout.Root>
-        <Callout.Text>{error}</Callout.Text>
-      </Callout.Root>
-    )}
-    {successMessage && (
-      <Callout.Root>
-        <Callout.Text>{successMessage}</Callout.Text>
-      </Callout.Root>
-    )}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <Input
+            size="sm"
+            variant="bordered"
+            placeholder="Your Name"
+            {...register('name', { required: 'Name is required' })}
+            isInvalid={!!errors.name}
+            errorMessage={errors.name?.message}
+            classNames={{ inputWrapper: "bg-white" }}
+          />
+        </div>
 
-      <Form
-      onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-1">
+          <Input
+            size="sm"
+            variant="bordered"
+            type="email"
+            placeholder="Email Address"
+            {...register('email', {
+              required: 'Email is required',
+              pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' }
+            })}
+            isInvalid={!!errors.email}
+            errorMessage={errors.email?.message}
+            classNames={{ inputWrapper: "bg-white" }}
+          />
+        </div>
 
-      <Flex gap='4' align='end' direction={{ initial : "column", md: "row"}}>
-
-      <Container>
-      {errors.name && <div className="text-red-500">{errors.name.message}</div>}
-      <Input
-          isRequired
-          placeholder="First Name"
-          type="text"
-          {...register('name', { required: 'First name is required' })}/>
-        </Container>
-
-       <Container>
-       {errors.email && <div className="text-red-500">{errors.email.message}</div>}
-        <Input
-          isRequired
-          placeholder="Email"
-          type="email"
-          {...register('email', { required : 'Email is required'})}
-        />
-        </Container>
-
-          <Button variant="outline" color="bronze" type="submit">
-            Sign Up
-          </Button>
-
-        </Flex>
-    </Form>
+        <Button
+          variant="classic"
+          color="grass"
+          highContrast
+          type="submit"
+          disabled={isSubmitting}
+          className="cursor-pointer shadow-md hover:shadow-lg transition-all"
+        >
+          {isSubmitting ? 'Subscribing...' : 'Subscribe Now'}
+        </Button>
+      </form>
     </Flex>
- )
+  );
 }
-export default Register
+
+export default Register;

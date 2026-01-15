@@ -1,11 +1,9 @@
 import prisma from '@/lib/prisma';
-import React from 'react'
-import RecipeDetails from '../../../components/RecipeDetails';
 import { Container, Flex, Link, Text, Box, Heading, Button } from '@radix-ui/themes';
 import { ArrowLeftIcon } from "@radix-ui/react-icons"
 import Pagination from '@/components/Pagination';
 import RecipeActions from '@/components/RecipeActions';
-import { Recipe } from '@prisma/client';
+import RecipeCard from '@/components/RecipeCard';
 
 const page = async ({ searchParams }: { searchParams: Promise<{ categories?: string, page: string }> }) => {
 
@@ -22,17 +20,25 @@ const page = async ({ searchParams }: { searchParams: Promise<{ categories?: str
       where: {
         categories: categories,
       },
+      include: {
+        assignedToUser: true,
+      },
       skip: (page - 1) * pageSize,
-      take: pageSize
+      take: pageSize,
     })
     : await prisma.recipe.findMany({
+      include: {
+        assignedToUser: true,
+      },
       skip: (page - 1) * pageSize,
-      take: pageSize
+      take: pageSize,
     });
 
   const recipeCount = await prisma.recipe.count({
-    where: { categories }
-  })
+    where: {
+      categories: categories !== "All" ? categories : undefined
+    }
+  });
 
   if (recipes.length === 0) {
     return (
@@ -90,9 +96,11 @@ const page = async ({ searchParams }: { searchParams: Promise<{ categories?: str
     <Container mb="8em" mt="5em">
       <Container maxWidth={{ initial: '90vw', md: '80vw', xl: '60vw' }}>
         <RecipeActions />
-        {recipes.map((recipe: Recipe) => (
-          <RecipeDetails key={recipe.id} recipe={recipe} />
-        ))}
+        <div className="space-y-8 mb-12">
+          {recipes.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+        </div>
         <Pagination itemCount={recipeCount} pageSize={pageSize} currentPage={page} />
       </Container>
     </Container>

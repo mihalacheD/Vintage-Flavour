@@ -1,15 +1,27 @@
-import { patchRecipeSchema } from "@/utils/validationSchema";
-import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { patchRecipeSchema } from "@/utils/validationSchema";
 import { getServerSession } from "next-auth";
-import authOptions from "@/utils/authOption";
+import { authOptions } from "@/lib/auth";
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export async function PATCH(request: NextRequest, { params }: Props) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({}, { status: 401 });
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await params;
+
+  const recipe = await prisma.recipe.findUnique({ where: { id } });
+  if (!recipe) return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
+
+
+  if (recipe.assignedToUserId !== session.user.id) {
+    return NextResponse.json({ error: "Forbidden: You are not the owner" }, { status: 403 });
+  }
 
   const body = await request.json();
   const validation = patchRecipeSchema.safeParse(body);
@@ -17,24 +29,9 @@ export async function PATCH(
   if (!validation.success)
     return NextResponse.json(validation.error.format(), { status: 400 });
 
-  const id = (await params).id;
-  const recipe = await prisma.recipe.findUnique({
-    where: { id: id },
-  });
-
-  if (body.assignedToUserId) {
-    const user = await prisma.user.findUnique({
-      where: { id: body.assignedToUserId },
-    });
-    if (!user)
-      return NextResponse.json({ error: "Invalid user." }, { status: 400 });
-  }
-
-  if (!recipe)
-    return NextResponse.json({ error: "Invalid recipe" }, { status: 404 });
 
   const updatedRecipe = await prisma.recipe.update({
-    where: { id: recipe.id },
+    where: { id },
     data: {
       title: body.title,
       categories: body.categories,
@@ -45,31 +42,30 @@ export async function PATCH(
       instructions: body.instructions,
       cookTime: body.cookTime,
       prepTime: body.prepTime,
-      imageUrl: body.imageUrl, // URL-ul imaginii
+      imageUrl: body.imageUrl,
       assignedToUserId: body.assignedToUserId,
     },
   });
+
   return NextResponse.json(updatedRecipe);
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: Props) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({}, { status: 401 });
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const id = (await params).id;
-  const recipe = await prisma.recipe.findUnique({
-    where: { id: id },
-  });
+  const { id } = await params;
+  const recipe = await prisma.recipe.findUnique({ where: { id } });
 
   if (!recipe)
     return NextResponse.json({ error: "Invalid recipe" }, { status: 404 });
 
-  await prisma.recipe.delete({
-    where: { id: id },
-  });
+  if (recipe.assignedToUserId !== session.user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
-  return NextResponse.json({});
+  await prisma.recipe.delete({ where: { id } });
+
+  return NextResponse.json({ message: "Deleted successfully" });
 }

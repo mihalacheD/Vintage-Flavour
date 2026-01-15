@@ -15,6 +15,7 @@ export const RecipeSchema = z.object({
     .string()
     .regex(/^([0-1]\d|2[0-3]):([0-5]\d)$/, "Invalid time format. Use HH:MM."),
   imageUrl: z.string().optional().nullable(),
+  imageBase64: z.string().optional(),
 });
 
 export const patchRecipeSchema = z.object({

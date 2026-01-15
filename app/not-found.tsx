@@ -1,4 +1,3 @@
-// app/not-found.tsx
 import { Flex, Heading, Text, Button } from '@radix-ui/themes';
 import Link from 'next/link';
 

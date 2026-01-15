@@ -1,27 +1,23 @@
 import prisma from '@/lib/prisma'
 import { Container, Heading, Text } from '@radix-ui/themes'
-import React from 'react'
 import Link from 'next/link'
 import CldImage from '@/components/CldImage'
-import '../app/recipes/recipe.css'
+
 
 const LatestRecipes = async () => {
   const recipes = await prisma.recipe.findMany({
     orderBy: { createdAt: 'desc' },
     take: 4,
-    include: {
-      assignedToUser: true,
-    },
   })
 
   return (
     <Container>
       {/* Section Header */}
       <div className="text-center mb-10 mt-16">
-        <Heading size="9" className="great-vibes-regular text-gray-800 mb-2">
-          Your everyday <span className="orange">inspiration</span>
+        <Heading size="9" className="great-vibes-regular text-gray-800">
+          Your everyday <span className="text-brand-orange">inspiration</span>
         </Heading>
-        <p className="text-gray-600 text-sm">
+        <p className="text-gray-600 text-sm mt-2">
           Discover our latest culinary creations
         </p>
       </div>
@@ -44,16 +40,16 @@ const LatestRecipes = async () => {
               />
 
               {/* New Badge */}
-              <div className="absolute top-3 left-3 bg-[#ec9131] text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+              <div className="absolute top-3 left-3 bg-brand-orange text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
                 NEW
               </div>
             </div>
 
             {/* Card Content */}
-            <div className="p-5 flex flex-col flex-grow">
+            <div className="p-5 flex flex-col grow">
               {/* Category Badge */}
               <div className="mb-3">
-                <span className="inline-block bg-[#79c141]/10 text-[#79c141] px-3 py-1 rounded-full text-xs font-medium">
+                <span className="inline-block bg-brand-green/10 text-brand-green px-3 py-1 rounded-full text-xs font-medium">
                   {recipe.categories}
                 </span>
               </div>
@@ -70,7 +66,7 @@ const LatestRecipes = async () => {
               <Text
                 color="gray"
                 size="2"
-                className="mb-4 flex-grow line-clamp-3"
+                className="mb-4 grow line-clamp-3"
               >
                 {recipe.description}
               </Text>
@@ -79,7 +75,7 @@ const LatestRecipes = async () => {
               <div className="mt-auto">
                 <Link
                   href={`/recipes/${recipe.id}`}
-                  className="inline-flex items-center text-[#79c141] hover:text-[#5ea330] font-medium text-sm transition-colors group/link"
+                  className="inline-flex items-center text-brand-green hover:text-brand-green/80 font-medium text-sm transition-colors group/link"
                 >
                   Read more
                   <svg

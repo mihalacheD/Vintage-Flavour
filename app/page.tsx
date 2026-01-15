@@ -1,12 +1,10 @@
-export const dynamic = "force-dynamic";
-
+import Article from "@/components/Article";
+import Categories from "@/components/Categories";
+import CristmasRecipes from "@/components/CristmasRecipes";
+import Footer from "@/components/Footer";
+import LatestRecipes from "@/components/LatestRecipes";
+import ShareRecipe from "@/components/ShareRecipe";
 import { Container } from "@radix-ui/themes";
-import LatestRecipes from "../components/LatestRecipes";
-import Categories from "../components/Categories";
-import ShareRecipe from "../components/ShareRecipe";
-import Article from "../components/Article";
-import Footer from "../components/Footer"
-import CristmasRecipes from "../components/CristmasRecipes";
 import { Metadata } from "next";
 
 
@@ -22,7 +20,7 @@ export default function Home() {
       <ShareRecipe />
       <Footer />
     </>
-  );
+  )
 }
 
 export const metadata: Metadata = {

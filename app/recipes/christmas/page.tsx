@@ -1,7 +1,6 @@
 import { Container, Heading, Text, Badge } from '@radix-ui/themes'
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
-import '../recipe.css'
 import CldImage from '@/components/CldImage'
 import Image from 'next/image'
 
@@ -16,7 +15,7 @@ const ChristmasPage = async () => {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-green-50 py-12">
+    <div className="min-h-screen bg-linear-to-b from-red-50 via-white to-green-50 py-12">
       <Container className="max-w-7xl mx-auto px-4">
 
         {/* Header Section */}
@@ -121,12 +120,12 @@ const ChristmasPage = async () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex flex-col flex-grow">
+                <div className="p-5 flex flex-col grow">
 
                   {/* Title */}
                   <Heading
                     size="5"
-                    className="orange mb-3 group-hover:text-red-600 transition-colors line-clamp-2"
+                    className="text-brand-orange mb-3 group-hover:text-red-600 transition-colors line-clamp-2"
                   >
                     {recipe.title}
                   </Heading>
@@ -134,7 +133,7 @@ const ChristmasPage = async () => {
                   {/* Description */}
                   <Text
                     size="2"
-                    className="text-gray-600 mb-4 line-clamp-3 flex-grow"
+                    className="text-gray-600 mb-4 line-clamp-3 grow"
                   >
                     {recipe.description}
                   </Text>

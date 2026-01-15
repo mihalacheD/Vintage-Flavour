@@ -1,15 +1,16 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input, Textarea } from '@nextui-org/input';
 import { Button, Container, Heading, Text, Box } from '@radix-ui/themes';
 import Image from 'next/image';
-import { useForm } from 'react-hook-form';
+import { Input, Textarea } from '@heroui/input';
+import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { z } from 'zod';
-import { Recipe } from '@prisma/client';
+
+import { Recipe } from '../app/generated/prisma/client';
 import { RecipeSchema } from '@/utils/validationSchema';
 import Upload_img from './Upload_img';
 import Spinner from './Spinner';
@@ -31,7 +32,7 @@ const RecipeForm = ({ recipe }: Props) => {
   const [isSubmitting, setSubmitting] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(recipe?.imageUrl || null);
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<RecipeFormData>({
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<RecipeFormData>({
     resolver: zodResolver(RecipeSchema),
     defaultValues: recipe ? {
       ...recipe,
@@ -55,9 +56,9 @@ const RecipeForm = ({ recipe }: Props) => {
     }
   }, [imageUrl, setValue]);
 
-  const selectedCategory = watch('categories');
-  const selectedDifficulty = watch('difficulties');
-  const selectedServings = watch('servings');
+  const selectedCategory = useWatch({ control, name: 'categories' });
+  const selectedDifficulty = useWatch({ control, name: 'difficulties' });
+  const selectedServings = useWatch({ control, name: 'servings' });
 
   const onSubmit = async (data: RecipeFormData) => {
     try {
@@ -86,10 +87,10 @@ const RecipeForm = ({ recipe }: Props) => {
   return (
     <div className="min-h-screen bg-gray-50 py-4 px-2 sm:py-8 sm:px-4">
       <Container size="3">
-        <Box className="bg-white rounded-[24px] sm:rounded-[32px] shadow-xl border border-gray-200 overflow-hidden">
+        <Box className="bg-white rounded-3xl sm:rounded-4xl shadow-xl border border-gray-200 overflow-hidden">
 
           {/* Header - Responsive text sizes */}
-          <Box className="bg-gradient-to-r from-[#EC9131] to-[#d97e1f] px-6 py-8 sm:px-8 sm:py-10 text-center">
+          <Box className="bg-linear-to-r from-brand-orange to-[#d97e1f] px-6 py-8 sm:px-8 sm:py-10 text-center">
             <Heading size={{ initial: "6", sm: "7" }} className="text-white mb-2 font-bold">
               {recipe ? "Edit Recipe" : "Create New Recipe"}
             </Heading>
@@ -138,8 +139,8 @@ const RecipeForm = ({ recipe }: Props) => {
                     type="button"
                     onClick={() => setValue('categories', cat as RecipeFormData['categories'], { shouldValidate: true })}
                     className={`px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full border-2 transition-all font-semibold text-xs sm:text-sm ${selectedCategory === cat
-                      ? "bg-[#EC9131] border-[#EC9131] text-white shadow-md scale-105"
-                      : "bg-white border-gray-300 text-gray-700 hover:border-[#EC9131]"
+                      ? "bg-brand-orange border-brand-orange text-white shadow-md scale-105"
+                      : "bg-white border-gray-300 text-gray-700 hover:border-brand-orange"
                       }`}
                   >
                     {cat}
@@ -179,7 +180,7 @@ const RecipeForm = ({ recipe }: Props) => {
                       type="button"
                       onClick={() => setValue('difficulties', d as RecipeFormData['difficulties'], { shouldValidate: true })}
                       className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl border-2 font-bold text-xs sm:text-sm transition-all ${selectedDifficulty === d
-                        ? "bg-orange-50 border-[#EC9131] text-[#EC9131]"
+                        ? "bg-orange-50 border-brand-orange text-brand-orange"
                         : "bg-white border-gray-300 text-gray-600"
                         }`}
                     >
@@ -218,7 +219,7 @@ const RecipeForm = ({ recipe }: Props) => {
                 disableAutosize={false}
                 classNames={{
                   base: "w-full",
-                  inputWrapper: "rounded-2xl border-2 border-gray-200 hover:border-gray-400 focus-within:border-[#EC9131] h-auto min-h-[120px] p-4",
+                  inputWrapper: "rounded-2xl border-2 border-gray-200 hover:border-gray-400 focus-within:border-brand-orange h-auto min-h-[120px] p-4",
                   input: "text-base resize-none py-0"
                 }}
                 {...register('description')}
@@ -261,7 +262,7 @@ const RecipeForm = ({ recipe }: Props) => {
             <div className="space-y-3">
               <label className="block text-xs font-bold uppercase text-gray-600">Recipe Photo</label>
               {imageUrl ? (
-                <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-xl overflow-hidden border-2">
+                <div className="relative w-full aspect-4/3 sm:aspect-video rounded-xl overflow-hidden border-2">
                   <Image src={imageUrl} alt="Preview" fill className="object-cover" />
                   <button type="button" onClick={() => setImageUrl(null)}
                     className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-red-500 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold shadow-lg">

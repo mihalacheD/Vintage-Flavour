@@ -1,8 +1,8 @@
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from '@radix-ui/themes';
 import Link from 'next/link';
-import React from 'react';
-import RecipeFilter from './RecipeFilter';
+import RecipeFilter from "./RecipeFilter";
+
 
 const RecipeActions = () => {
   return (

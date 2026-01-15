@@ -1,35 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
 }
-
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
-model Recipe {
-  id               String   @id @default(uuid())
-  title            String
-  categories       String
-  servings         String
-  difficulties     String
-  description      String
-  ingredients      String   @db.Text
-  instructions     String   @db.Text
-  cookTime         String
-  prepTime         String
-  imageUrl         String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  assignedToUserId String?  @db.VarChar(255)
-  assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id])
 }
 
 model Account {
@@ -45,10 +20,10 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId], map: "accounts_user_id_fkey")
   @@map("accounts")
 }
 
@@ -59,19 +34,20 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId], map: "sessions_user_id_fkey")
   @@map("sessions")
 }
 
 model User {
-  id              String    @id @default(cuid())
-  name            String?
-  email           String?   @unique
-  emailVerified   DateTime? @map("email_verified")
-  image           String?
-  hashedPassword  String?
-  accounts        Account[]
-  sessions        Session[]
-  assignedRecipes Recipe[]
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime? @map("email_verified")
+  image          String?
+  hashedPassword String?
+  accounts       Account[]
+  recipe         Recipe[]
+  sessions       Session[]
 
   @@map("users")
 }
@@ -83,4 +59,33 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Recipe {
+  id               String   @id @default(cuid())
+  title            String
+  categories       String
+  servings         String
+  difficulties     String
+  description      String
+  ingredients      String   @db.Text
+  instructions     String   @db.Text
+  cookTime         String
+  prepTime         String
+  imageUrl         String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  assignedToUserId String?  @db.VarChar(255)
+  assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id])
+
+  @@index([assignedToUserId])
+  @@map("recipes")
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

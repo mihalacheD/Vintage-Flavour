@@ -1,77 +1,69 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { RecipeSchema } from "../../../utils/validationSchema";
+import { RecipeSchema } from "@/utils/validationSchema";
 import { getServerSession } from "next-auth";
-import authOptions from "@/utils/authOption";
+import { authOptions } from "@/lib/auth";
+import { randomUUID } from "crypto";
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({}, { status: 401 });
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await request.json();
+  try {
+    const body = await request.json();
 
-  // Validarea input-ului folosind Zod
-  const validation = RecipeSchema.safeParse(body);
-  if (!validation.success) {
-    return NextResponse.json(validation.error.errors, { status: 400 });
-  }
-
-  // Inițializare URL imagine
-  let imageUrl = body.imageUrl; // Dacă imaginea este deja un URL valid
-  if (body.imageBase64) {
-    try {
-      // Verificare dacă imageBase64 este valid
-      if (!isValidBase64(body.imageBase64)) {
-        return NextResponse.json(
-          { error: "Invalid image format" },
-          { status: 400 }
-        );
-      }
-
-      // Trimite imaginea la Cloudinary folosind un endpoint intern
-      const cloudinaryResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/upload-image`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: body.imageBase64 }),
-        }
-      );
-
-      if (!cloudinaryResponse.ok) {
-        throw new Error("Failed to upload image to Cloudinary");
-      }
-
-      const cloudinaryData = await cloudinaryResponse.json();
-      imageUrl = cloudinaryData.url; // Actualizăm URL-ul imaginii
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      return NextResponse.json({ error: errorMessage }, { status: 500 });
+    // Validare Zod
+    const validation = RecipeSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(validation.error.flatten(), { status: 400 });
     }
+
+    let imageUrl = body.imageUrl;
+
+    // Logica de upload imagine (Base64 către Cloudinary)
+    if (body.imageBase64 && body.imageBase64.startsWith("data:image")) {
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+      const formData = new FormData();
+      formData.append("file", body.imageBase64);
+      formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET!);
+
+      const cloudinaryResponse = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (cloudinaryResponse.ok) {
+        const data = await cloudinaryResponse.json();
+        imageUrl = data.secure_url;
+      }
+    }
+
+    const newRecipe = await prisma.recipe.create({
+      data: {
+        id: randomUUID(),
+        title: body.title,
+        categories: body.categories,
+        servings: body.servings,
+        difficulties: body.difficulties,
+        description: body.description,
+        ingredients: body.ingredients,
+        instructions: body.instructions,
+        cookTime: body.cookTime,
+        prepTime: body.prepTime,
+        imageUrl: imageUrl,
+        updatedAt: new Date(),
+        assignedToUserId: session.user.id,
+      },
+    });
+
+    return NextResponse.json(newRecipe, { status: 201 });
+  } catch (error) {
+    console.error("Recipe POST error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
-
-  // Crearea unei noi rețete în baza de date
-  const newRecipe = await prisma.recipe.create({
-    data: {
-      title: body.title,
-      categories: body.categories,
-      servings: body.servings,
-      difficulties: body.difficulties,
-      description: body.description,
-      ingredients: body.ingredients,
-      instructions: body.instructions,
-      cookTime: body.cookTime,
-      prepTime: body.prepTime,
-      imageUrl: imageUrl, // URL-ul imaginii
-    },
-  });
-
-  // Returnează rețeta creată
-  return NextResponse.json(newRecipe, { status: 201 });
-}
-
-// Funcție pentru a verifica validitatea unui base64
-function isValidBase64(base64String: string) {
-  const regex = /^data:image\/[a-zA-Z]+;base64,/;
-  return regex.test(base64String);
 }

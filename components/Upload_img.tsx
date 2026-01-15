@@ -1,8 +1,7 @@
 'use client';
 
 import { CldUploadWidget } from 'next-cloudinary';
-import { Input } from '@nextui-org/input';
-import { Image } from '@nextui-org/image';
+import { Input, Image } from "@heroui/react";
 import { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

@@ -1,13 +1,23 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not defined in environment variables");
+}
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    log: ['query', 'error', 'warn'],
-  });
+const adapter = new PrismaMariaDb(connectionString);
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+const prismaClientSingleton = () => {
+  return new PrismaClient({ adapter });
+};
 
-export default prisma;
+declare global {
+  var prisma: undefined | ReturnType<typeof prismaClientSingleton>;
+}
+
+export const prisma = globalThis.prisma ?? prismaClientSingleton();
+
+if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
+
+export default prisma

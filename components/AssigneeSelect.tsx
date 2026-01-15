@@ -1,11 +1,12 @@
 'use client'
-import Skeleton from '@/components/Skeleton'
-import { Recipe, User } from '@prisma/client'
+
+import { Recipe, User } from '../app/generated/prisma/client'
 import { Container, Select, Flex } from '@radix-ui/themes'
 import { useQuery } from '@tanstack/react-query'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
-import React from 'react'
+import { Skeleton } from '@heroui/react'
+
 
 const AssigneeSelect = ({ recipe }: { recipe: Recipe }) => {
   const { data: users, error, isLoading } = useQuery<User[]>({
@@ -15,7 +16,7 @@ const AssigneeSelect = ({ recipe }: { recipe: Recipe }) => {
     retry: 3
   })
 
-  if (isLoading) return <Skeleton height="2rem" />;
+  if (isLoading) return <Skeleton />;
   if (error) return null;
 
   const assignRecipe = async (userId: string) => {
